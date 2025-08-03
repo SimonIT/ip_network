@@ -24,6 +24,12 @@
 //!
 //! [PostgreSQL CIDR type]: https://www.postgresql.org/docs/current/datatype-net-types.html#DATATYPE-CIDR
 
+// Set `no_std` where `std` feature is disabled
+#![cfg_attr(not(feature = "std"), no_std)]
+
+#[cfg(feature = "alloc")]
+extern crate alloc;
+
 #[cfg(feature = "diesel")]
 #[macro_use]
 extern crate diesel;
@@ -44,8 +50,8 @@ mod postgres_support;
 #[cfg(feature = "serde")]
 mod serde_support;
 
-use std::error::Error;
-use std::fmt;
+use core::error::Error;
+use core::fmt;
 
 pub use self::ip_network::IpNetwork;
 pub use self::ipv4_network::Ipv4Network;

@@ -1,12 +1,18 @@
-use std::cmp;
-use std::fmt;
-use std::net::Ipv4Addr;
-use std::str::FromStr;
-use std::hash::{Hash, Hasher};
+#[cfg(feature = "alloc")]
+use alloc::vec;
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
+use core::cmp;
+use core::fmt;
+use core::net::Ipv4Addr;
+use core::str::FromStr;
+use core::hash::{Hash, Hasher};
 use crate::{IpNetworkError, IpNetworkParseError};
 use crate::helpers;
 use crate::iterator;
+#[cfg(feature = "std")]
 use std::collections::HashMap;
+#[cfg(feature = "std")]
 use std::collections::hash_map::Entry;
 
 /// IPv4 Network.
@@ -607,6 +613,8 @@ impl Ipv4Network {
     /// # Examples
     ///
     /// ```
+    /// #[cfg(feature = "alloc")]
+    /// {
     /// use std::net::Ipv4Addr;
     /// use ip_network::Ipv4Network;
     ///
@@ -616,13 +624,15 @@ impl Ipv4Network {
     /// );
     ///
     /// assert_eq!(Ipv4Network::new(Ipv4Addr::new(10, 254, 0, 0), 15)?, ranges[0]);
+    /// }
     /// # Ok::<(), ip_network::IpNetworkError>(())
     /// ```
+    #[cfg(feature = "alloc")]
     pub fn summarize_address_range(first: Ipv4Addr, last: Ipv4Addr) -> Vec<Self> {
         let mut first_int = u32::from(first);
         let last_int = u32::from(last);
 
-        let mut vector = vec![];
+        let mut vector = Vec::new();
 
         while first_int <= last_int {
             let bit_length_diff = if last_int - first_int == u32::MAX {
@@ -660,6 +670,8 @@ impl Ipv4Network {
     /// # Examples
     ///
     /// ```
+    /// #[cfg(feature = "std")]
+    /// {
     /// use std::net::Ipv4Addr;
     /// use ip_network::Ipv4Network;
     ///
@@ -669,8 +681,10 @@ impl Ipv4Network {
     /// ]);
     ///
     /// assert_eq!(Ipv4Network::new(Ipv4Addr::new(192, 0, 2, 0), 24)?, collapsed[0]);
+    /// }
     /// # Ok::<(), ip_network::IpNetworkError>(())
     /// ```
+    #[cfg(feature = "std")]
     pub fn collapse_addresses(addresses: &[Self]) -> Vec<Self> {
         let mut subnets = HashMap::new();
 
@@ -830,9 +844,13 @@ impl IntoIterator for Ipv4Network {
 
 #[cfg(test)]
 mod tests {
-    use std::net::Ipv4Addr;
+    extern crate std;
+    extern crate alloc;
+
+    use alloc::string::ToString;
+    use core::net::Ipv4Addr;
     use crate::{IpNetworkError, Ipv4Network};
-    use std::str::FromStr;
+    use core::str::FromStr;
     use std::collections::hash_map::DefaultHasher;
     use std::hash::{Hash, Hasher};
 
@@ -1105,6 +1123,7 @@ mod tests {
         assert_eq!(first_hash, second_hash);
     }
 
+    #[cfg(feature = "alloc")]
     #[test]
     fn summarize_address_range() {
         let networks = Ipv4Network::summarize_address_range(
@@ -1122,6 +1141,7 @@ mod tests {
         );
     }
 
+    #[cfg(feature = "alloc")]
     #[test]
     fn summarize_address_range_whole_range() {
         let networks = Ipv4Network::summarize_address_range(
@@ -1135,6 +1155,7 @@ mod tests {
         );
     }
 
+    #[cfg(feature = "alloc")]
     #[test]
     fn summarize_address_range_first_is_bigger() {
         let networks = Ipv4Network::summarize_address_range(
@@ -1144,6 +1165,7 @@ mod tests {
         assert_eq!(0, networks.len());
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses() {
         let addresses = [
@@ -1157,6 +1179,7 @@ mod tests {
         assert_eq!(Ipv4Network::from_str("192.0.2.0/24").unwrap(), collapsed[0]);
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses_2() {
         let addresses = [
@@ -1168,6 +1191,7 @@ mod tests {
         assert_eq!(Ipv4Network::from_str("192.0.2.0/24").unwrap(), collapsed[0]);
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses_3() {
         // test only IP addresses including some duplicates
@@ -1185,6 +1209,7 @@ mod tests {
         assert_eq!(Ipv4Network::from_str("1.1.1.4/32").unwrap(), collapsed[1]);
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses_4() {
         // test a mix of IP addresses and networks including some duplicates
@@ -1199,6 +1224,7 @@ mod tests {
         assert_eq!(Ipv4Network::from_str("1.1.1.0/30").unwrap(), collapsed[0]);
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses_5() {
         // test only IP networks
@@ -1216,6 +1242,7 @@ mod tests {
         assert_eq!(Ipv4Network::from_str("1.1.4.0/24").unwrap(), collapsed[1]);
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses_5_order() {
         let addresses = [
@@ -1233,6 +1260,7 @@ mod tests {
         assert_eq!(Ipv4Network::from_str("1.1.4.0/24").unwrap(), collapsed[1]);
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses_6() {
         //  test that two addresses are supernet'ed properly
@@ -1245,6 +1273,7 @@ mod tests {
         assert_eq!(Ipv4Network::from_str("1.1.0.0/23").unwrap(), collapsed[0]);
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses_7() {
         // test same IP networks
@@ -1257,6 +1286,7 @@ mod tests {
         assert_eq!(Ipv4Network::from_str("1.1.1.1/32").unwrap(), collapsed[0]);
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses_8() {
         let addresses = [
@@ -1268,6 +1298,7 @@ mod tests {
         assert_eq!(Ipv4Network::from_str("0.0.0.0/0").unwrap(), collapsed[0]);
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses_9() {
         let addresses = [

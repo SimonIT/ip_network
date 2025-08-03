@@ -1,10 +1,14 @@
-use std::cmp::Ordering;
-use std::fmt;
-use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
-use std::str::FromStr;
-use crate::{IpNetworkError, IpNetworkParseError};
 use crate::helpers;
+use crate::{IpNetworkError, IpNetworkParseError};
 use crate::{Ipv4Network, Ipv6Network};
+#[cfg(feature = "alloc")]
+use alloc::vec;
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
+use core::cmp::Ordering;
+use core::fmt;
+use core::net::{IpAddr, Ipv4Addr, Ipv6Addr};
+use core::str::FromStr;
 
 /// Holds IPv4 or IPv6 network.
 #[derive(Clone, Copy, Eq, PartialEq, Debug, Hash, PartialOrd, Ord)]
@@ -206,6 +210,7 @@ impl IpNetwork {
     }
 
     /// Return an iterator of the collapsed IpNetworks.
+    #[cfg(feature = "std")]
     pub fn collapse_addresses(addresses: &[Self]) -> Vec<Self> {
         let mut ipv4_networks = vec![];
         let mut ipv6_networks = vec![];
@@ -392,9 +397,12 @@ impl PartialOrd<IpNetwork> for Ipv6Network {
 
 #[cfg(test)]
 mod tests {
-    use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
-    use crate::{IpNetwork, IpNetworkParseError, IpNetworkError, Ipv4Network, Ipv6Network};
-    use std::str::FromStr;
+    extern crate std;
+    extern crate alloc;
+
+    use crate::{IpNetwork, IpNetworkError, IpNetworkParseError, Ipv4Network, Ipv6Network};
+    use alloc::string::ToString;
+    use core::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
     fn return_test_ipv4_network() -> Ipv4Network {
         Ipv4Network::new(Ipv4Addr::new(192, 168, 0, 0), 16).unwrap()
@@ -607,6 +615,7 @@ mod tests {
         assert!(ip_network_v6 > ip_network_v4);
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses() {
         let addresses: Vec<_> = [

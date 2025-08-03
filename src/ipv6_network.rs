@@ -1,11 +1,13 @@
-use std::fmt;
-use std::net::Ipv6Addr;
-use std::str::FromStr;
-use std::hash::{Hash, Hasher};
+use core::fmt;
+use core::net::Ipv6Addr;
+use core::str::FromStr;
+use core::hash::{Hash, Hasher};
 use crate::{IpNetworkError, IpNetworkParseError};
 use crate::helpers;
 use crate::iterator;
+#[cfg(feature = "std")]
 use std::collections::HashMap;
+#[cfg(feature = "std")]
 use std::collections::hash_map::Entry;
 
 /// IPv6 Multicast Address Scopes.
@@ -216,7 +218,7 @@ impl Ipv6Network {
     /// # Ok::<(), ip_network::IpNetworkError>(())
     /// ```
     pub fn subnets(&self) -> iterator::Ipv6NetworkIterator {
-        let new_netmask = ::std::cmp::min(self.netmask + 1, Self::LENGTH);
+        let new_netmask = ::core::cmp::min(self.netmask + 1, Self::LENGTH);
         iterator::Ipv6NetworkIterator::new(*self, new_netmask)
     }
 
@@ -541,6 +543,8 @@ impl Ipv6Network {
     /// # Examples
     ///
     /// ```
+    /// #[cfg(feature = "std")]
+    /// {
     /// use std::net::Ipv6Addr;
     /// use ip_network::Ipv6Network;
     /// use std::str::FromStr;
@@ -551,8 +555,10 @@ impl Ipv6Network {
     /// ]);
     ///
     /// assert_eq!(Ipv6Network::from_str("2001::/96")?, collapsed[0]);
+    /// }
     /// # Ok::<(), ip_network::IpNetworkParseError>(())
     /// ```
+    #[cfg(feature = "std")]
     pub fn collapse_addresses(addresses: &[Self]) -> Vec<Self> {
         let mut subnets = HashMap::new();
 
@@ -664,10 +670,14 @@ impl Hash for Ipv6Network {
 
 #[cfg(test)]
 mod tests {
-    use std::net::Ipv6Addr;
+    extern crate std;
+    extern crate alloc;
+
+    use alloc::string::ToString;
+    use core::net::Ipv6Addr;
     use crate::{Ipv6Network, IpNetworkError, Ipv6MulticastScope};
-    use std::str::FromStr;
-    use std::hash::{Hash, Hasher};
+    use core::str::FromStr;
+    use core::hash::{Hash, Hasher};
     use std::collections::hash_map::DefaultHasher;
 
     fn return_test_ipv6_network() -> Ipv6Network {
@@ -860,6 +870,7 @@ mod tests {
         );
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses() {
         let addresses = [

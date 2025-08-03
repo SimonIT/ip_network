@@ -1,4 +1,4 @@
-use std::net::{Ipv4Addr, Ipv6Addr};
+use core::net::{Ipv4Addr, Ipv6Addr};
 use crate::{Ipv4Network, Ipv6Network};
 use crate::helpers;
 
@@ -272,7 +272,10 @@ impl ExactSizeIterator for Ipv6NetworkIterator {}
 
 #[cfg(test)]
 mod tests {
-    use std::net::{Ipv4Addr, Ipv6Addr};
+    extern crate std;
+
+    use std::vec::Vec;
+    use core::net::{Ipv4Addr, Ipv6Addr};
     use crate::{Ipv4Network, Ipv6Network};
     use super::{Ipv4NetworkIterator, Ipv4RangeIterator, Ipv6NetworkIterator};
 
