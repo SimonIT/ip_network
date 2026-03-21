@@ -618,6 +618,8 @@ mod tests {
     #[cfg(feature = "std")]
     #[test]
     fn collapse_addresses() {
+        use core::str::FromStr;
+
         let addresses: Vec<_> = [
             "192.0.2.0/25",
             "192.0.2.128/25",

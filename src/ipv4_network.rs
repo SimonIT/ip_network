@@ -670,8 +670,6 @@ impl Ipv4Network {
     /// # Examples
     ///
     /// ```
-    /// #[cfg(feature = "std")]
-    /// {
     /// use std::net::Ipv4Addr;
     /// use ip_network::Ipv4Network;
     ///
@@ -681,7 +679,6 @@ impl Ipv4Network {
     /// ]);
     ///
     /// assert_eq!(Ipv4Network::new(Ipv4Addr::new(192, 0, 2, 0), 24)?, collapsed[0]);
-    /// }
     /// # Ok::<(), ip_network::IpNetworkError>(())
     /// ```
     #[cfg(feature = "std")]

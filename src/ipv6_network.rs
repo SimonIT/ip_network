@@ -543,8 +543,6 @@ impl Ipv6Network {
     /// # Examples
     ///
     /// ```
-    /// #[cfg(feature = "std")]
-    /// {
     /// use std::net::Ipv6Addr;
     /// use ip_network::Ipv6Network;
     /// use std::str::FromStr;
@@ -555,7 +553,6 @@ impl Ipv6Network {
     /// ]);
     ///
     /// assert_eq!(Ipv6Network::from_str("2001::/96")?, collapsed[0]);
-    /// }
     /// # Ok::<(), ip_network::IpNetworkParseError>(())
     /// ```
     #[cfg(feature = "std")]
