@@ -32,9 +32,9 @@ impl Ipv4Network {
         netmask: 0,
     };
 
-    /// Constructs new `Ipv4Network` based on [`Ipv4Addr`] and `netmask`.
+    /// Constructs a new `Ipv4Network` based on [`Ipv4Addr`] and `netmask`.
     ///
-    /// Returns error if netmask is bigger than 32 or if host bits are set in `network_address`.
+    /// Returns error if the netmask is bigger than 32 or if host bits are set in `network_address`.
     ///
     /// [`Ipv4Addr`]: https://doc.rust-lang.org/std/net/struct.Ipv4Addr.html
     ///
@@ -606,15 +606,13 @@ impl Ipv4Network {
 
     /// Return a vector of the summarized network range given the first and last IPv4 addresses.
     /// Implementation of this method was inspired by Python [`ipaddress.summarize_address_range`]
-    /// method. If first IP address is bigger than last, empty vector is returned.
+    /// method. If the first IP address is bigger than the last, the empty vector is returned.
     ///
     /// [`ipaddress.summarize_address_range`]: https://docs.python.org/3/library/ipaddress.html#ipaddress.summarize_address_range
     ///
     /// # Examples
     ///
     /// ```
-    /// #[cfg(feature = "alloc")]
-    /// {
     /// use std::net::Ipv4Addr;
     /// use ip_network::Ipv4Network;
     ///
@@ -624,7 +622,6 @@ impl Ipv4Network {
     /// );
     ///
     /// assert_eq!(Ipv4Network::new(Ipv4Addr::new(10, 254, 0, 0), 15)?, ranges[0]);
-    /// }
     /// # Ok::<(), ip_network::IpNetworkError>(())
     /// ```
     #[cfg(feature = "alloc")]
@@ -707,7 +704,7 @@ impl Ipv4Network {
 
         for net in values {
             if let Some(last) = output.last() {
-                // Since they are sorted, last.network_address <= net.network_address is a given.
+                // Since they are sorted, the last.network_address <= net.network_address is a given.
                 if last.broadcast_address() >= net.broadcast_address() {
                     continue;
                 }

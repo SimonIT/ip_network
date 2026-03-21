@@ -145,7 +145,7 @@ impl IpNetwork {
         }
     }
 
-    /// Returns `true` if the network is default route, that contains all IP addresses.
+    /// Returns `true` if the network is the default route, that contains all IP addresses.
     pub fn is_default_route(&self) -> bool {
         match self {
             IpNetwork::V4(ip_network) => ip_network.is_default_route(),
@@ -153,7 +153,7 @@ impl IpNetwork {
         }
     }
 
-    /// Returns `true` if the network is part of multicast network range.
+    /// Returns `true` if the network is part of a multicast network range.
     pub fn is_multicast(&self) -> bool {
         match self {
             IpNetwork::V4(ip_network) => ip_network.is_multicast(),
@@ -161,7 +161,7 @@ impl IpNetwork {
         }
     }
 
-    /// Returns `true` if this is a part of network reserved for documentation.
+    /// Returns `true` if this is a part of the network reserved for documentation.
     pub fn is_documentation(&self) -> bool {
         match self {
             IpNetwork::V4(ip_network) => ip_network.is_documentation(),
@@ -169,7 +169,7 @@ impl IpNetwork {
         }
     }
 
-    /// Returns `true` if this network is inside loopback address range.
+    /// Returns `true` if this network is inside the loopback address range.
     pub fn is_loopback(&self) -> bool {
         match self {
             IpNetwork::V4(ip_network) => ip_network.is_loopback(),

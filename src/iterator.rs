@@ -19,7 +19,7 @@ pub struct Ipv4RangeIterator {
 }
 
 impl Ipv4RangeIterator {
-    /// Constructs new `Ipv4RangeIterator` for given range, both `from` and `to` address are inclusive.
+    /// Constructs a new `Ipv4RangeIterator` for a given range, both `from` and `to` address are inclusive.
     ///
     /// # Panics
     ///
@@ -50,11 +50,11 @@ impl Ipv4RangeIterator {
         }
     }
 
-    /// Constructs new `Ipv4RangeIterator` that iterates host (without network and broadcast address)
+    /// Constructs a new `Ipv4RangeIterator` that iterates host (without network and broadcast address)
     /// IPs in Ipv4Network.
     pub fn hosts(network: Ipv4Network) -> Self {
         if network.netmask() >= 31 {
-            // Network doesn't contains any host IPs, create empty iterator.
+            // Network doesn't contain any host IPs, create empty iterator.
             Self {
                 current: 0,
                 to: 0,

@@ -39,9 +39,9 @@ impl Ipv6Network {
         netmask: 0,
     };
 
-    /// Constructs new `Ipv6Network` based on [`Ipv6Addr`] and `netmask`.
+    /// Constructs a new `Ipv6Network` based on [`Ipv6Addr`] and `netmask`.
     ///
-    /// Returns error if netmask is bigger than 128 or if host bits are set in `network_address`.
+    /// Returns error if the netmask is bigger than 128 or if host bits are set in `network_address`.
     ///
     /// [`Ipv6Addr`]: https://doc.rust-lang.org/std/net/struct.Ipv6Addr.html
     ///
